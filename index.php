@@ -1,22 +1,24 @@
 <?php 
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 require 'config/database.php';
 $db = new Database();
 $con = $db->conectar();
 
-$sql = $con->prepare("SELECT id, nombre, precio FROM productos WHERE activo=1");
+$sql = $con->prepare("SELECT id_prod, nombre, precio FROM productos WHERE activo=1");
 $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
+//var_dump($resultado);
 
 ?>
 
 
-
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset='utf-8'>
+    <meta charset='UTF-8'>
     <meta http-equiv='X-UA-Compatible' content='IE=edge'>
     <title>Aurora</title>
     <meta name='viewport' content='width=device-width, initial-scale=1'>
@@ -39,7 +41,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
       <div class="collapse navbar-collapse" id="navbarHeader">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                 <li class="nav-item">
-                    <a href="#" class="nav-link-active">Catalogo</a>
+                    <a href="#" class="nav-link active">Catalogo</a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">Contacto</a>
@@ -59,8 +61,9 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
     <div class="col">
           <div class="card shadow-sm">
             <?php 
-            $id = $row["id"];
+            $id = $row["id_prod"];
             $imagen = "images/productos/" . $id . "/principal.jpg";
+           
             if(!file_exists($imagen)) {
                 $imagen = "images/no-photo.jpg";
             }
@@ -70,7 +73,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
             <img src="<?php echo $imagen;?>">
             <div class="card-body">
               <h5 class="card-tittle"><?php echo $row['nombre']; ?></h5>
-                <p class="card-text">$<?php echo number_format($row['precio'], 2 , '.',','); ?></p>
+                <p class="card-text">$ <?php echo number_format($row['precio'], 2 , '.',','); ?></p>
                 <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
                     <a href="" class="btn btn-primary">Detalles</a>
