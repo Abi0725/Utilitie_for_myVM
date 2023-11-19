@@ -11,6 +11,11 @@ $sql = $con->prepare("SELECT id_prod, nombre, precio FROM productos WHERE activo
 $sql->execute();
 $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 
+//session_destroy();
+
+//test
+print_r($_SESSION);
+
 //var_dump($resultado);
 
 ?>
@@ -49,7 +54,9 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                 </li>
         </ul>  
 
-        <a href="carrito.php" class="btn btn-primary">Carrito</a>
+        <a href="checkout.php" class="btn btn-primary">
+            Carrito <span id="num_cart" class ="badge bg_secondary"><?php echo $num_cart; ?></span>
+        </a>
     </div>
     </div>
   </div>
@@ -80,7 +87,7 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                 <a href="detalles.php?id_prod=<?php echo $row['id_prod']; ?>&token=<?php echo hash_hmac('sha256', $row['id_prod'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
 
                 </div>
-                <a href="" class="btn btn-success">Agregar</a>
+                <button class="btn btn-outline-success" type="button" onclick="addProducto(<?php echo $row['id_prod'];?>, '<?php echo hash_hmac('sha256', $row['id_prod'], KEY_TOKEN); ?>')">Agregar al carrito</button>
               </div>
             </div>
           </div>
@@ -90,5 +97,27 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
 </main>
 
     <script src='bootstrap/js/bootstrap.min.js'></script>
+
+    <script>
+        function addProducto(id_prod, token){
+            let url = 'clases/carrito.php'
+            let formData = new FormData()
+            formData.append('id_prod', id_prod)
+            formData.append('token', token)
+
+            fetch(url, {
+                method: 'POST',
+                body: formData,
+                mode: 'cors'
+            }).then(response => response.json())
+            .then(data =>{
+                if(data.ok){
+                    let elemento = document.getElementById("num_cart")
+                    elemento.innerHTML = data.numero
+                }
+            })
+        }
+    </script>
+
 </body>
 </html>
