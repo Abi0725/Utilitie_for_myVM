@@ -2,6 +2,7 @@
 error_reporting(E_ALL);
 ini_set('display_errors', 1);
 
+require 'config/config.php';
 require 'config/database.php';
 $db = new Database();
 $con = $db->conectar();
@@ -76,7 +77,8 @@ $resultado = $sql->fetchAll(PDO::FETCH_ASSOC);
                 <p class="card-text">$ <?php echo number_format($row['precio'], 2 , '.',','); ?></p>
                 <div class="d-flex justify-content-between align-items-center">
                 <div class="btn-group">
-                    <a href="" class="btn btn-primary">Detalles</a>
+                <a href="detalles.php?id_prod=<?php echo $row['id_prod']; ?>&token=<?php echo hash_hmac('sha256', $row['id_prod'], KEY_TOKEN); ?>" class="btn btn-primary">Detalles</a>
+
                 </div>
                 <a href="" class="btn btn-success">Agregar</a>
               </div>
