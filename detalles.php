@@ -14,27 +14,27 @@ $token = isset($_GET['token']) ? $_GET['token'] : '';
 echo "ID: $id, Token: $token<br>";
 
 
-if ($id == '' || $token == '') {
+if ($id_prod == '' || $token == '') {
     echo 'Error al procesar la preticion';
     exit;
 } else {
-    $token_tmp = hash_hmac('sha256', $id, KEY_TOKEN);
+    $token_tmp = hash_hmac('sha256', $id_prod, KEY_TOKEN);
 
     if($token == $token_tmp) {
 
         $sql = $con->prepare("SELECT count(id_prod) FROM productos WHERE id_prod=? AND activo=1");
-        $sql->execute([$id]);
+        $sql->execute([$id_prod]);
 
         if($sql->fetchcolumn() > 0){
-            $sql = $con->prepare("SELECT nombre, descripcion, precio FROM productos WHERE id_prod=? AND activo=1 LIMIT 1");
-            $sql->execute([$id]);
+            $sql = $con->prepare("SELECT nombre, descripcion, precio, descuento FROM productos WHERE id_prod=? AND activo=1 LIMIT 1");
+            $sql->execute([$id_prod]);
             $row = $sql->fetch(PDO::FETCH_ASSOC);
             $nombre = $row['nombre'];
             $descripcion = $row['descripcion'];
             $precio = $row['precio'];
             $descuento = isset($row['descuento']) ? $row['descuento'] : 0;
             $precio_desc = $precio - (($precio * $descuento) / 100);
-            $dir_images = 'images/productos/' . $id . '/';
+            $dir_images = 'images/productos/' . $id_prod . '/';
 
             $rutaImg = $dir_images . 'principal.jpg';
 

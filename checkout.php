@@ -103,7 +103,7 @@ if($productos !=null){
                     <tr>
                         <td><?php echo $nombre; ?></td>
                         <td><?php echo MONEDA . number_format($precio_desc, 2, '.', '.'); ?></td>
-                        <td><input type="number" min="1" max="10" step="1" value="<?php echo $cantidad; ?>" size="5" id="cantidad_<?php echo $_id; ?>" onchange="">      
+                        <td><input type="number" min="1" max="10" step="1" value="<?php echo $cantidad; ?>" size="5" id="cantidad_<?php echo $_id; ?>" onchange="actualizaCantidad(this.value, <?php echo $_id; ?>)">      
                         </td>
                         <td>
                             <div id="subtotal <?php echo $_id; ?>" name="subtotal[]"><?php echo MONEDA . number_format($subtotal, 2, '.', '.'); ?></div>
@@ -125,7 +125,7 @@ if($productos !=null){
             </table>
         </div>
         <div class="row">
-            <div class="col-md-5 offset-md7 d-grid gap-2">
+            <div class="col-md-5 offset-md-7 d-grid gap-2">
                 <button class="btn btn-primary btn-lg">Realizar pago</button>
             </div>
 
@@ -136,11 +136,12 @@ if($productos !=null){
     <script src='bootstrap/js/bootstrap.min.js'></script>
 
     <script>
-        function addProducto(id_prod, token){
-            let url = 'clases/carrito.php'
+        function actualizaCantidad(cantidad, id_prod){
+            let url = 'clases/actualizar_carrito.php'
             let formData = new FormData()
+            formData.append('action', 'agregar')
             formData.append('id_prod', id_prod)
-            formData.append('token', token)
+            formData.append('cantidad', cantidad)
 
             fetch(url, {
                 method: 'POST',
